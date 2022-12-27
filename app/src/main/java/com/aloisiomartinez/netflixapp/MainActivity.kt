@@ -17,13 +17,13 @@ class MainActivity : AppCompatActivity() {
 
         val movies = mutableListOf<Movie>()
         for(i in 0 until 60) {
-            val movie = Movie(coverUrl = "https://exemplo.com/$i.jpg")
+            val movie = Movie(coverUrl = R.drawable.movie)
             movies.add(movie)
         }
 
         val adapter = MainAdapter(movies)
         val rv: RecyclerView = findViewById(R.id.rv_main)
-        rv.layoutManager = LinearLayoutManager(this)
+        rv.layoutManager = LinearLayoutManager(this, RecyclerView.HORIZONTAL, false)
         rv.adapter = adapter
 
     }
