@@ -27,10 +27,6 @@ class MovieActivity : AppCompatActivity() {
         txtCast.text = getString(R.string.cast, "Ator A, Ator B, Ator C, Ator D")
 
         val movies = mutableListOf<Movie>()
-        for(i in 0 until 15) {
-            val movie = Movie(coverUrl = R.drawable.movie)
-            movies.add(movie)
-        }
 
         rv.layoutManager = GridLayoutManager(this, 3)
         rv.adapter = MovieAdapter(movies, R.layout.movie_item_similar)
@@ -43,9 +39,9 @@ class MovieActivity : AppCompatActivity() {
         supportActionBar?.title = null
 
 
-
         // get drawable (layer-list)
-        val layerDrawable: LayerDrawable = ContextCompat.getDrawable(this, R.drawable.shadows) as LayerDrawable
+        val layerDrawable: LayerDrawable =
+            ContextCompat.getDrawable(this, R.drawable.shadows) as LayerDrawable
         //get movie
         val movieCover = ContextCompat.getDrawable(this, R.drawable.movie_4)
         //set layer-list to movie
