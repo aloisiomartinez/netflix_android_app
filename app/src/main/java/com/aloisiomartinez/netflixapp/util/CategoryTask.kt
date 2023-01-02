@@ -1,5 +1,7 @@
 package co.aloisiomartinez.netflixremake.util
 
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import com.aloisiomartinez.netflixapp.model.Category
 import com.aloisiomartinez.netflixapp.model.Movie
@@ -13,9 +15,17 @@ import java.nio.Buffer
 import java.util.concurrent.Executors
 import javax.net.ssl.HttpsURLConnection
 
-class CategoryTask {
+class CategoryTask(private val callback: Callback) {
+    private val handler = Handler(Looper.getMainLooper())
+
+    interface Callback {
+        fun onPreExecute()
+        fun onResult(categories: List<Category>)
+        fun onFailure(message: String)
+    }
 
     fun execute(url: String) {
+        callback.onPreExecute()
         // nesse momento, estamos utilizando a UI-thread (1)
         val executor = Executors.newSingleThreadExecutor()
 
@@ -46,10 +56,19 @@ class CategoryTask {
 
                 // o JSON está preparado para ser convertido em um DATA CLASS!!
                 val categories = toCategories(jsonAsString)
-                Log.i("Teste", categories.toString())
+
+                handler.post {
+                    // Aqui roda dentro da UI-Thread
+                    callback.onResult(categories)
+                }
 
             } catch (e: IOException) {
-                Log.e("Teste", e.message ?: "erro desconhecido", e)
+                val message = e.message ?: "erro desconhecido"
+                Log.e("Teste", message, e)
+
+                handler.post {
+                    callback.onFailure(message)
+                }
             } finally {
                 urlConnection?.disconnect()
                 stream?.close()
@@ -58,7 +77,7 @@ class CategoryTask {
         }
     }
 
-    private fun toCategories(jsonAsString: String) : List<Category> {
+    private fun toCategories(jsonAsString: String): List<Category> {
         val categories = mutableListOf<Category>()
 
         val jsonRoot = JSONObject(jsonAsString)
@@ -84,12 +103,12 @@ class CategoryTask {
         return categories
     }
 
-    private fun toString(stream: InputStream) : String {
+    private fun toString(stream: InputStream): String {
         val bytes = ByteArray(1024)
         val baos = ByteArrayOutputStream()
         var read: Int
 
-        while(true) {
+        while (true) {
             read = stream.read(bytes)
             if (read <= 0) {
                 break
