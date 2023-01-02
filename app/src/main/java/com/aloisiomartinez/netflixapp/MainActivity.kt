@@ -17,16 +17,18 @@ import com.aloisiomartinez.netflixapp.model.Movie
 class MainActivity : AppCompatActivity(), CategoryTask.Callback {
 
     private lateinit var progressBar: ProgressBar
+    private lateinit var adapter: CategoryAdapter
+    private val categories = mutableListOf<Category>()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
         progressBar = findViewById(R.id.progress_main)
-        val categories = mutableListOf<Category>()
 
 
         // Main Adapter na vertical para lista de categorias dos filmes
-        val adapter = CategoryAdapter(categories)
+        adapter = CategoryAdapter(categories)
         val rv: RecyclerView = findViewById(R.id.rv_main)
         rv.layoutManager = LinearLayoutManager(this, RecyclerView.VERTICAL, false)
         rv.adapter = adapter
@@ -41,7 +43,11 @@ class MainActivity : AppCompatActivity(), CategoryTask.Callback {
 
     override fun onResult(categories: List<Category>) {
         // aqui será quando o categoryTask chamará de volta
-        Log.i("Teste Activity", categories.toString())
+        // o this referencia o categories da classe
+        this.categories.clear()
+        this.categories.addAll(categories)
+        adapter.notifyDataSetChanged() // força o adapter a chamar novamente o onBindViewHolder, etc
+
         progressBar.visibility = View.GONE
 
     }
