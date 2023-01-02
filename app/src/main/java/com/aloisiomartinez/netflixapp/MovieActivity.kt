@@ -3,6 +3,7 @@ package com.aloisiomartinez.netflixapp
 import android.graphics.drawable.LayerDrawable
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.MenuItem
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.widget.Toolbar
@@ -20,6 +21,7 @@ class MovieActivity : AppCompatActivity() {
         val txtTitle: TextView = findViewById(R.id.movie_txt_title)
         val txtDesc: TextView = findViewById(R.id.movie_txt_desc)
         val txtCast: TextView = findViewById(R.id.movie_txt_cast)
+
         val rv: RecyclerView = findViewById(R.id.movie_rv_similar)
 
         txtTitle.text = "Batman Begins"
@@ -50,5 +52,12 @@ class MovieActivity : AppCompatActivity() {
         val coverImg: ImageView = findViewById(R.id.movie_img)
         coverImg.setImageDrawable(layerDrawable)
 
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        if(item.itemId == android.R.id.home) {
+            finish()
+        }
+        return super.onOptionsItemSelected(item)
     }
 }

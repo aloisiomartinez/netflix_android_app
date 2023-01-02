@@ -11,10 +11,14 @@ import androidx.recyclerview.widget.RecyclerView.Recycler
 import com.aloisiomartinez.netflixapp.model.Category
 import com.aloisiomartinez.netflixapp.model.Movie
 
-class CategoryAdapter(private val categories: List<Category>) : RecyclerView.Adapter<CategoryAdapter.CategoryViewHolder>() {
+class CategoryAdapter(
+    private val categories: List<Category>,
+    private val onItemClickListener: (Int) -> Unit
+) : RecyclerView.Adapter<CategoryAdapter.CategoryViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CategoryViewHolder {
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.category_item, parent, false)
+        val view =
+            LayoutInflater.from(parent.context).inflate(R.layout.category_item, parent, false)
         return CategoryViewHolder(view)
     }
 
@@ -27,16 +31,17 @@ class CategoryAdapter(private val categories: List<Category>) : RecyclerView.Ada
         return categories.size
     }
 
-     inner class CategoryViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-         fun bind(category: Category) {
-             val txtTitle: TextView = itemView.findViewById(R.id.txt_title)
-             txtTitle.text = category.name
+    inner class CategoryViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        fun bind(category: Category) {
+            val txtTitle: TextView = itemView.findViewById(R.id.txt_title)
+            txtTitle.text = category.name
 
-             val rvCategory: RecyclerView = itemView.findViewById(R.id.rv_category)
+            val rvCategory: RecyclerView = itemView.findViewById(R.id.rv_category)
 
-             rvCategory.layoutManager = LinearLayoutManager(itemView.context, RecyclerView.HORIZONTAL, false)
-             rvCategory.adapter = MovieAdapter(category.movies, R.layout.movie_item)
-         }
+            rvCategory.layoutManager =
+                LinearLayoutManager(itemView.context, RecyclerView.HORIZONTAL, false)
+            rvCategory.adapter = MovieAdapter(category.movies, R.layout.movie_item, onItemClickListener)
+        }
 
     }
 }
