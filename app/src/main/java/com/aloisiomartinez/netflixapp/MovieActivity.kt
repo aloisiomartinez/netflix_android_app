@@ -83,7 +83,7 @@ class MovieActivity : AppCompatActivity(), MovieTask.Callback {
         movies.clear()
         movies.addAll(movieDetail.similars)
         adapter.notifyDataSetChanged()
-        
+
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
